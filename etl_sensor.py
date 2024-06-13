@@ -1,6 +1,8 @@
 import pandas as pd
 import sqlalchemy
 import streamlit as st
+import schedule
+import time
 
 # Definir a URL de conexão para o SQLAlchemy
 db_url = "postgresql+psycopg2://postgres:2Smx'P?8[#RA\#9Z@192.168.210.40/IOTDatabase"
@@ -8,6 +10,8 @@ db_url = "postgresql+psycopg2://postgres:2Smx'P?8[#RA\#9Z@192.168.210.40/IOTData
 # Criar o engine do SQLAlchemy
 engine = sqlalchemy.create_engine(db_url)
 
+#def etl_process():
+    
 # Definir a consulta SQL
 query = "SELECT * FROM parseddata_x_artifact;"
 
@@ -158,6 +162,9 @@ df_final['Hora'] = df_final['Data Hora'].dt.strftime('%H:%M:%S')
 
 # Opcional: Remover a coluna original 'Data Hora'
 df_final.drop(columns=['Data Hora'], inplace=True)
+
+# Especificar os tipos de dados como VARCHAR
+df_final = df_final.astype(object)
 
 # Inserir o DataFrame tratado em uma nova tabela no banco de dados
 df_final.to_sql('tabela_tratada_sensor_rmc', engine, if_exists='replace', index=False)
